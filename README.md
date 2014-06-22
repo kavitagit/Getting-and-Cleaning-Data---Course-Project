@@ -3,86 +3,22 @@ Getting-and-Cleaning-Data---Course-Project
 
 Coursera - Data Science Toolbox 2014
 
-## Coursera Getting and Cleaning Data Course Project - June 2014
 
-# 1. Merge the training and the test sets to create one data set.
-#set working directory - where unzpped UCI HAR Dataset was stored
-setwd("/Users/Kavita/Documents/Coursera - Data Science/Getting and Cleaning Data/Course Project/UCI HAR Dataset/")
+Purpose: The purpose of this project is to demonstrate your ability to collect, work with, and clean a data set. The goal is to prepare tidy data that can be used for later analysis. 
 
-# Read the data from files
-# Read common files
-features = read.table('./features.txt',header=FALSE)
-activityType = read.table('./activity_labels.txt',header=FALSE)
+Raw Data: One of the most exciting areas in all of data science right now is wearable computing - see for example this article . Companies like Fitbit, Nike, and Jawbone Up are racing to develop the most advanced algorithms to attract new users. The data linked to from the course website represent data collected from the accelerometers from the Samsung Galaxy S smartphone. A full description is available at the site where the data was obtained: 
 
-#Read "train" files
-subjectTrain = read.table('./train/subject_train.txt',header=FALSE)
-xTrain = read.table('./train/x_train.txt',header=FALSE)
-yTrain = read.table('./train/y_train.txt',header=FALSE)
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones 
 
-#Read "test" files
-subjectTest = read.table('./test/subject_test.txt',header=FALSE)
-xTest = read.table('./test/x_test.txt',header=FALSE)
-yTest = read.table('./test/y_test.txt',header=FALSE)
+Here are the data for the project: 
 
-#Assign Column names to above files
-colnames(features) = c('featureID','featureType')
-colnames(activityType)  = c('activityId','activityType')
-colnames(subjectTrain)= c('subjectId')
-colnames(xTrain)= features[,2]
-colnames(yTrain)= c('activityId')
-colnames(subjectTest) = c('subjectId')
-colnames(xTest) = features[,2] 
-colnames(yTest) = c('activityId')
+https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
 
-#Create Final training set - merging subjectTrain, xTrain and yTrain
-trainData = cbind(cbind(xTrain,subjectTrain), yTrain)
-
-#Create Final test set - merging subjectTest, xTest and yTest
-testData = cbind(cbind(xTest,subjectTest),yTest)
-
-# Combine Final data set - merging training and test data
-finalData = rbind(trainData,testData)
-
-# Label columns
-finalDatalabels <- rbind(rbind(features, c(562, "Subject")), c(563, "ActivityId"))[,2];
-names(finalData) <- finalDatalabels
-
-# 2. Extracts only the measurements on the mean and standard deviation for each measurement.
-finalDataMeanStd <- finalData[,grepl("mean|std|Subject|ActivityId", names(finalData))]
-
-# 3. Uses descriptive activity names to name the activities in the data set
-
-#use the activity names to name the activities in the set
-#first create the activity column for the entire dataset - test and train:
-#assign a column name so we can merge on it
-#join the activityLabels - we use join from the plyr package and not merge, because join preserves order
-#add the column to the entire dataset
-
-activityLabels <- read.table('./activity_labels.txt',stringsAsFactors=FALSE);
-colnames(activityLabels) <- c("activityID","activityLabel");
-allActivities <- rbind(yTest,yTrain);
-colnames(allActivities)[1] <- "activityID";
-activities <- join(allActivities,activityLabels,by="activityID");
-finalDataMeanStd <- cbind(activity=activities[,"activityLabel"],finalDataMeanStd)
-
-# 4. Appropriately labels the data set with descriptive variable names. 
-colNames  = colnames(finalDataMeanStd)
-for (i in 1:length(colNames)) {
-        colNames[i] = gsub("\\()","",colNames[i])
-        colNames[i] = gsub("-mean","Mean",colNames[i])
-        colNames[i] = gsub("-std$","StdDev",colNames[i])
-        colNames[i] = gsub("^(t)","time",colNames[i])
-        colNames[i] = gsub("^(f)","freq",colNames[i])
-        colNames[i] = gsub("BodyBody","Body",colNames[i])
-        colNames[i] = gsub("AccMag","AccMagnitude",colNames[i])
-        colNames[i] = gsub("Bodyaccjerkmag","BodyAccJerkMagnitude",colNames[i])
-        colNames[i] = gsub("JerkMag","JerkMagnitude",colNames[i])
-        colNames[i] = gsub("GyroMag","GyroMagnitude",colNames[i])}
-colnames(finalDataMeanStd) = colNames
-# Cleaning up the variable names
-# Reassigning the new descriptive column names to the finalData set
-
-# 5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
-tidyData = ddply(finalDataMeanStd, c("Subject","ActivityId"), numcolwise(mean))
-write.table(tidyData, file = "tidyData.txt")
-
+Project Summary: The following is a summary of the project instructions:
+ 
+Ceate one R script called run_analysis.R that does the following:
+Merges the training and the test sets to create one data set.
+Extracts only the measurements on the mean and standard deviation for each measurement. 
+Uses descriptive activity names to name the activities in the data set
+Appropriately labels the data set with descriptive variable names. 
+Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
