@@ -1,0 +1,29 @@
+The code is in file 'run_analysis.R' in the main directory that can be run as long as the Samsung data is in the working directory. Process run_analisys.R script to create a tidy data set.
+
+Steps to create run_analisys.R script :
+
+1. Merge the training and the test sets to create one data set.
+- set working directory - where unzipped UCI HAR Dataset was stored
+- Read training and test files
+- Merge training and test sets
+- Assign column names to the merged data set
+
+2. Extracts only the measurements on the mean and standard deviation for each measurement.
+- Extract mean and standard deviation variables
+- From the merged data set is extracted and intermediate data set with only the values of estimated mean and standard deviation 
+
+3. Uses descriptive activity names to name the activities in the data set
+- use the activity names to name the activities in the set
+- first create the activity column for the entire dataset - test and train:
+- assign a column name so we can merge on it
+- join the activityLabels - we use join from the plyr package and not merge, because join preserves order
+- add the column to the entire dataset
+
+4. Appropriately labels the data set with descriptive variable names. 
+- Cleaning up the variable names
+- Reassigning the new descriptive column names to the finalData set
+- Labels given in raw data were changed to obtain valid R names without parentheses, dashes and commas to obtain more descriptive labels
+
+5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+- Create a tidy data set
+- From the intermediate data set is created a final tidy data set where numeric variables are averaged for each activity and each subject.
